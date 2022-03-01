@@ -35,6 +35,7 @@ import {
 import { default as GraphemeSplitter } from 'grapheme-splitter'
 
 import './App.css'
+import { Navbar } from './components/navbar/Navbar'
 import { AlertContainer } from './components/alerts/AlertContainer'
 import { useAlert } from './context/AlertContext'
 import { CharStatus } from './lib/statuses'
@@ -161,50 +162,44 @@ function App() {
   }
 
   return (
-    <div className="pt-2 pb-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <div className="flex w-80 mx-auto items-center mb-8 mt-1">
-        <h1 className="text-xl ml-2.5 grow font-bold dark:text-white">
-          {GAME_TITLE}
-        </h1>
-        <InformationCircleIcon
-          className="h-6 w-6 mr-2 cursor-pointer dark:stroke-white"
-          onClick={() => setIsInfoModalOpen(true)}
+    <div className="h-screen flex flex-col">
+      <Navbar
+        setIsInfoModalOpen={setIsInfoModalOpen}
+        setIsSettingsModalOpen={setIsSettingsModalOpen}
+      />
+      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
+        <div className="pb-6 grow">
+          <Grid
+            guesses={guesses}
+            statuses={statuses}
+            currentGuess={currentGuess}
+            currentStatuses={currentStatuses}
+            currentRowClassName={currentRowClass}
+            setCurrentStatuses={setCurrentStatuses}
+            // isRevealing={isRevealing}
+          />
+        </div>
+        <Keyboard
+          onChar={onChar}
+          onDelete={onDelete}
+          onEnter={onEnter}
+          guesses={guesses}
+          // isRevealing={isRevealing}
         />
-        <CogIcon
-          className="h-6 w-6 mr-3 cursor-pointer dark:stroke-white"
-          onClick={() => setIsSettingsModalOpen(true)}
+        <InfoModal
+          isOpen={isInfoModalOpen}
+          handleClose={() => setIsInfoModalOpen(false)}
         />
+        <SettingsModal
+          isOpen={isSettingsModalOpen}
+          handleClose={() => setIsSettingsModalOpen(false)}
+          isDarkMode={isDarkMode}
+          handleDarkMode={handleDarkMode}
+          isHighContrastMode={isHighContrastMode}
+          handleHighContrastMode={handleHighContrastMode}
+        />
+        <AlertContainer />
       </div>
-      <Grid
-        guesses={guesses}
-        statuses={statuses}
-        currentGuess={currentGuess}
-        currentStatuses={currentStatuses}
-        currentRowClassName={currentRowClass}
-        setCurrentStatuses={setCurrentStatuses}
-        // isRevealing={isRevealing}
-      />
-      <Keyboard
-        onChar={onChar}
-        onDelete={onDelete}
-        onEnter={onEnter}
-        guesses={guesses}
-        // isRevealing={isRevealing}
-      />
-      <InfoModal
-        isOpen={isInfoModalOpen}
-        handleClose={() => setIsInfoModalOpen(false)}
-      />
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        handleClose={() => setIsSettingsModalOpen(false)}
-        isDarkMode={isDarkMode}
-        handleDarkMode={handleDarkMode}
-        isHighContrastMode={isHighContrastMode}
-        handleHighContrastMode={handleHighContrastMode}
-      />
-
-      <AlertContainer />
     </div>
   )
 }
