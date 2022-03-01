@@ -1,4 +1,3 @@
-import { getGuessStatuses } from '../../lib/statuses'
 import { Cell } from './Cell'
 import { unicodeSplit } from '../../lib/words'
 

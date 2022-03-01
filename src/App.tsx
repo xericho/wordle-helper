@@ -1,8 +1,3 @@
-import {
-  InformationCircleIcon,
-  ChartBarIcon,
-  CogIcon,
-} from '@heroicons/react/outline'
 import { useState, useEffect } from 'react'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
@@ -36,9 +31,9 @@ import { default as GraphemeSplitter } from 'grapheme-splitter'
 
 import './App.css'
 import { Navbar } from './components/navbar/Navbar'
+import { WordList } from './components/list/WordList'
 import { AlertContainer } from './components/alerts/AlertContainer'
 import { useAlert } from './context/AlertContext'
-import { CharStatus } from './lib/statuses'
 
 function App() {
   const prefersDarkMode = window.matchMedia(
@@ -146,14 +141,16 @@ function App() {
       unicodeLength(currentGuess) === MAX_WORD_LENGTH &&
       guesses.length < MAX_CHALLENGES 
     ) {
+      // Store statuses and guesses
       setStatuses([...statuses, currentStatuses])
       setGuesses([...guesses, currentGuess])
       // Reset guess and statuses for new row
-      setCurrentGuess('')
       setCurrentStatuses([])
+      setCurrentGuess('')
+      // Update list
 
       if (guesses.length === MAX_CHALLENGES - 1) {
-        showErrorAlert(CORRECT_WORD_MESSAGE('FINISH'), {
+        showSuccessAlert("Thanks for trying out Herdle!", {
           persist: true,
           delayMs: REVEAL_TIME_MS * MAX_WORD_LENGTH + 1,
         })
@@ -162,43 +159,52 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen ">
       <Navbar
         setIsInfoModalOpen={setIsInfoModalOpen}
         setIsSettingsModalOpen={setIsSettingsModalOpen}
       />
-      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
-        <div className="pb-6 grow">
-          <Grid
+      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-wrap grow">
+        <div className="px-2 grow">
+          <div className="pb-6 grow">
+            <Grid
+              guesses={guesses}
+              statuses={statuses}
+              currentGuess={currentGuess}
+              currentStatuses={currentStatuses}
+              currentRowClassName={currentRowClass}
+              setCurrentStatuses={setCurrentStatuses}
+              // isRevealing={isRevealing}
+            />
+          </div>
+          <Keyboard
+            onChar={onChar}
+            onDelete={onDelete}
+            onEnter={onEnter}
             guesses={guesses}
             statuses={statuses}
-            currentGuess={currentGuess}
-            currentStatuses={currentStatuses}
-            currentRowClassName={currentRowClass}
-            setCurrentStatuses={setCurrentStatuses}
             // isRevealing={isRevealing}
           />
+          <InfoModal
+            isOpen={isInfoModalOpen}
+            handleClose={() => setIsInfoModalOpen(false)}
+          />
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            handleClose={() => setIsSettingsModalOpen(false)}
+            isDarkMode={isDarkMode}
+            handleDarkMode={handleDarkMode}
+            isHighContrastMode={isHighContrastMode}
+            handleHighContrastMode={handleHighContrastMode}
+          />
+          <AlertContainer />
         </div>
-        <Keyboard
-          onChar={onChar}
-          onDelete={onDelete}
-          onEnter={onEnter}
-          guesses={guesses}
-          // isRevealing={isRevealing}
-        />
-        <InfoModal
-          isOpen={isInfoModalOpen}
-          handleClose={() => setIsInfoModalOpen(false)}
-        />
-        <SettingsModal
-          isOpen={isSettingsModalOpen}
-          handleClose={() => setIsSettingsModalOpen(false)}
-          isDarkMode={isDarkMode}
-          handleDarkMode={handleDarkMode}
-          isHighContrastMode={isHighContrastMode}
-          handleHighContrastMode={handleHighContrastMode}
-        />
-        <AlertContainer />
+        <div className="px-2 grow">
+          <WordList
+            guess={currentGuess}
+            statuses={currentStatuses}
+          />
+        </div>
       </div>
     </div>
   )

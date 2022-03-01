@@ -8,7 +8,7 @@ type Props = {
   children?: ReactNode
   value: string
   width?: number
-  status?: CharStatus
+  status?: CharStatus | string
   onClick: (value: string) => void
   isRevealing?: boolean
 }

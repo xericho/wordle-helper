@@ -3,37 +3,16 @@ import { unicodeSplit } from './words'
 export type CharStatus = 'absent' | 'present' | 'correct'
 
 export const getStatuses = (
-  guesses: string[]
-): { [key: string]: CharStatus } => {
-  const charObj: { [key: string]: CharStatus } = {}
+  guesses: string[],
+  statuses: string[][]
+): { [key: string]: CharStatus | string} => {
+  const charObj: { [key: string]: CharStatus | string} = {}
 
-  // guesses.forEach((word) => {
-  //   unicodeSplit(word).forEach((letter, i) => {
-  //     if (!splitSolution.includes(letter)) {
-  //       // make status absent
-  //       return (charObj[letter] = 'absent')
-  //     }
-
-  //     if (letter === splitSolution[i]) {
-  //       //make status correct
-  //       return (charObj[letter] = 'correct')
-  //     }
-
-  //     if (charObj[letter] !== 'correct') {
-  //       //make status present
-  //       return (charObj[letter] = 'present')
-  //     }
-  //   })
-  // })
+  guesses.forEach((word, gi) => {
+    unicodeSplit(word).forEach((letter, i) => {
+      return (charObj[letter] = statuses[gi][i])
+    })
+  })
 
   return charObj
-}
-
-export const getGuessStatuses = (guess: string): CharStatus[] => {
-  const splitGuess = unicodeSplit(guess)
-
-  const statuses: CharStatus[] = Array.from(Array(guess.length))
-
-
-  return statuses
 }
