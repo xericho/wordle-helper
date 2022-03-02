@@ -61,6 +61,7 @@ function App() {
   )
   const [guesses, setGuesses] = useState<string[]>([])
   const [statuses, setStatuses] = useState<string[][]>([])
+  const [wordList, setWordList] = useState<any[]>([]);
 
 
   useEffect(() => {
@@ -135,6 +136,21 @@ function App() {
       setCurrentStatuses([])
       setCurrentGuess('')
       // Update word list
+      let excludeLetters = new Set<string>()
+      let includeLetters = new Set<string>()
+      let guess = ['_', '_', '_', '_', '_']
+
+      statuses.forEach((row, i) => {
+        row.forEach((status, pos) => {
+          if (status === 'absent') excludeLetters.add(guesses[i][pos])
+          else if (status === 'present') includeLetters.add(guesses[i][pos])
+          else if (status === 'correct') guess[pos] = guesses[i][pos]
+        })
+      })
+      let url = `https://fly.wordfinderapi.com/api/search?&length=5&word_sorting=points&group_by_length=true&dictionary=wordle&contains=${guess.join('').toLowerCase()}&exclude_letters=${Array.from(excludeLetters.values()).join('').toLowerCase()}&include_letters=${Array.from(includeLetters.values()).join('').toLowerCase()}`
+      fetch(url)
+      .then(resp => resp.json())
+      .then(data => setWordList(data.word_pages[0].word_list))
       setIsWordListModalOpen(true)
 
       if (guesses.length === MAX_CHALLENGES - 1) {
@@ -181,8 +197,7 @@ function App() {
           <WordListModal
             isOpen={isWordListModalOpen}
             handleClose={() => setIsWordListModalOpen(false)}
-            guesses={guesses}
-            statuses={statuses}
+            wordList={wordList}
           />
           <SettingsModal
             isOpen={isSettingsModalOpen}

@@ -1,20 +1,17 @@
-import { Cell } from '../grid/Cell'
 import { WordList } from '../wordlist/WordList'
 import { BaseModal } from './BaseModal'
 
 type Props = {
   isOpen: boolean
   handleClose: () => void
-  guesses: string[]
-  statuses: string[][]
+  wordList: any[]
 }
 
-export const WordListModal = ({ isOpen, handleClose, guesses, statuses }: Props) => {
+export const WordListModal = ({ isOpen, handleClose, wordList }: Props) => {
   return (
     <BaseModal title="Next Best Words" isOpen={isOpen} handleClose={handleClose}>
       <WordList
-        guesses={guesses}
-        statuses={statuses}
+        wordList={wordList}
       />
     </BaseModal>
   )
