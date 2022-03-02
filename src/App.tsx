@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Grid } from './components/grid/Grid'
 import { Keyboard } from './components/keyboard/Keyboard'
 import { InfoModal } from './components/modals/InfoModal'
+import { WordListModal } from './components/modals/WordListModal'
 import { SettingsModal } from './components/modals/SettingsModal'
 import {
   GAME_TITLE,
@@ -31,7 +32,7 @@ import { default as GraphemeSplitter } from 'grapheme-splitter'
 
 import './App.css'
 import { Navbar } from './components/navbar/Navbar'
-import { WordList } from './components/list/WordList'
+import { WordList } from './components/wordlist/WordList'
 import { AlertContainer } from './components/alerts/AlertContainer'
 import { useAlert } from './context/AlertContext'
 
@@ -46,6 +47,7 @@ function App() {
   const [currentStatuses, setCurrentStatuses] = useState<string[]>([])
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [isWordListModalOpen, setIsWordListModalOpen] = useState(false)
   const [currentRowClass, setCurrentRowClass] = useState('')
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem('theme')
@@ -59,12 +61,6 @@ function App() {
   )
   const [guesses, setGuesses] = useState<string[]>([])
   const [statuses, setStatuses] = useState<string[][]>([])
-
-  const [isHardMode, setIsHardMode] = useState(
-    localStorage.getItem('gameMode')
-      ? localStorage.getItem('gameMode') === 'hard'
-      : false
-  )
 
 
   useEffect(() => {
@@ -84,15 +80,6 @@ function App() {
   const handleDarkMode = (isDark: boolean) => {
     setIsDarkMode(isDark)
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
-  }
-
-  const handleHardMode = (isHard: boolean) => {
-    if (guesses.length === 0 || localStorage.getItem('gameMode') === 'hard') {
-      setIsHardMode(isHard)
-      localStorage.setItem('gameMode', isHard ? 'hard' : 'normal')
-    } else {
-      showErrorAlert(HARD_MODE_ALERT_MESSAGE)
-    }
   }
 
   const handleHighContrastMode = (isHighContrast: boolean) => {
@@ -147,7 +134,8 @@ function App() {
       // Reset guess and statuses for new row
       setCurrentStatuses([])
       setCurrentGuess('')
-      // Update list
+      // Update word list
+      setIsWordListModalOpen(true)
 
       if (guesses.length === MAX_CHALLENGES - 1) {
         showSuccessAlert("Thanks for trying out Herdle!", {
@@ -159,12 +147,13 @@ function App() {
   }
 
   return (
-    <div className="h-screen ">
+    <div className="h-screen flex flex-col">
       <Navbar
         setIsInfoModalOpen={setIsInfoModalOpen}
+        setIsWordListModalOpen={setIsWordListModalOpen}
         setIsSettingsModalOpen={setIsSettingsModalOpen}
       />
-      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-wrap grow">
+      <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
         <div className="px-2 grow">
           <div className="pb-6 grow">
             <Grid
@@ -189,6 +178,12 @@ function App() {
             isOpen={isInfoModalOpen}
             handleClose={() => setIsInfoModalOpen(false)}
           />
+          <WordListModal
+            isOpen={isWordListModalOpen}
+            handleClose={() => setIsWordListModalOpen(false)}
+            guesses={guesses}
+            statuses={statuses}
+          />
           <SettingsModal
             isOpen={isSettingsModalOpen}
             handleClose={() => setIsSettingsModalOpen(false)}
@@ -199,12 +194,12 @@ function App() {
           />
           <AlertContainer />
         </div>
-        <div className="px-2 grow">
+        {/* <div className="px-2 grow sm:invisible">
           <WordList
-            guess={currentGuess}
-            statuses={currentStatuses}
+            guesses={guesses}
+            statuses={statuses}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )

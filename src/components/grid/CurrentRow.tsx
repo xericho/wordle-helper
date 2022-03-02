@@ -23,7 +23,6 @@ export const CurrentRow = ({
   const onClick = (status: string, index: number) => {
     currentStatuses[index] = status
     setCurrentStatuses(currentStatuses)
-    console.log(status, index, currentStatuses)
   }
 
   return (

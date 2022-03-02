@@ -1,4 +1,7 @@
 import {
+    SupportIcon,
+    SearchIcon,
+    CollectionIcon,
     ChartBarIcon,
     CogIcon,
     InformationCircleIcon,
@@ -7,11 +10,13 @@ import {
   
   type Props = {
     setIsInfoModalOpen: (value: boolean) => void
+    setIsWordListModalOpen: (value: boolean) => void
     setIsSettingsModalOpen: (value: boolean) => void
   }
   
   export const Navbar = ({
     setIsInfoModalOpen,
+    setIsWordListModalOpen,
     setIsSettingsModalOpen,
   }: Props) => {
     return (
@@ -23,6 +28,10 @@ import {
           />
           <p className="text-xl ml-2.5 font-bold dark:text-white">{GAME_TITLE}</p>
           <div className="right-icons">
+            <SupportIcon
+              className="h-6 w-6 mr-3 cursor-pointer dark:stroke-white"
+              onClick={() => setIsWordListModalOpen(true)}
+            />
             <CogIcon
               className="h-6 w-6 mr-3 cursor-pointer dark:stroke-white"
               onClick={() => setIsSettingsModalOpen(true)}
