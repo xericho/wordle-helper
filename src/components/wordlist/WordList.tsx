@@ -14,9 +14,9 @@ export const WordList = ({ guesses, statuses }: Props) => {
 
   statuses.forEach((row, i) => {
     row.forEach((status, pos) => {
-      if (status == 'absent') excludeLetters.add(guesses[i][pos])
-      else if (status == 'present') includeLetters.add(guesses[i][pos])
-      else if (status == 'correct') guess[pos] = guesses[i][pos]
+      if (status === 'absent') excludeLetters.add(guesses[i][pos])
+      else if (status === 'present') includeLetters.add(guesses[i][pos])
+      else if (status === 'correct') guess[pos] = guesses[i][pos]
     })
   })
   let url = `https://fly.wordfinderapi.com/api/search?&length=5&word_sorting=points&group_by_length=true&dictionary=wordle&contains=${guess.join('').toLowerCase()}&exclude_letters=${Array.from(excludeLetters.values()).join('').toLowerCase()}&include_letters=${Array.from(includeLetters.values()).join('').toLowerCase()}`
