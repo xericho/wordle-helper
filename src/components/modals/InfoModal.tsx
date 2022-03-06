@@ -1,5 +1,9 @@
 import { Cell } from '../grid/Cell'
 import { BaseModal } from './BaseModal'
+import { WordList } from '../wordlist/WordList'
+import {
+    SupportIcon,
+  } from '@heroicons/react/outline'
 
 type Props = {
   isOpen: boolean
@@ -11,7 +15,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
     <BaseModal title="How to Use" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         Enter a word and click on each letter to change it's color. After 
-        pressing enter, a list of suggested words will appear on the right.
+        pressing enter, a modal of suggested words will appear.
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
@@ -61,23 +65,26 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
         Change the letter to the desired color.
       </p>
 
-      {/* <div className="flex justify-center mb-1 mt-4">
-        <Cell value="V" />
-        <Cell value="A" />
-        <Cell value="G" />
-        <Cell isRevealing={true} isCompleted={true} value="U" status="absent" />
-        <Cell value="E" />
-      </div>
+      <WordList
+        wordList={[{'word': 'fuzzy'},{'word': 'comfy'},{'word': 'howdy'},{'word': 'dumpy'},{'word': 'woozy'},]}
+      />
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        The letter U is not in the word in any spot.
-      </p> */}
+        A list of words will appear to help you solve Wordle!
+      </p>
+
+      <div className="flex mb-1 mt-4">
+      <SupportIcon className="h-6 w-6 mr-3 cursor-pointer dark:stroke-white" />
+      <p className="text-sm text-gray-500 dark:text-gray-300">
+        Click on this icon to view the word list again.
+      </p></div>
 
       <p className="mt-6 italic text-sm text-gray-500 dark:text-gray-300">
         <a
           href="https://github.com/xericho/wordle-helper"
           className="underline font-bold"
+          tabIndex={-1}
         >
-          Check out the code here
+          Check out the code here.
         </a>{' '}
       </p>
     </BaseModal>

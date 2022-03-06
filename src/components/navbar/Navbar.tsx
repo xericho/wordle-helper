@@ -20,7 +20,7 @@ import {
     setIsSettingsModalOpen,
   }: Props) => {
     return (
-      <div className="navbar grow">
+      <div className="navbar ">
         <div className="navbar-content px-5">
           <InformationCircleIcon
             className="h-6 w-6 mr-2 cursor-pointer dark:stroke-white"

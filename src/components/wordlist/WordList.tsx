@@ -8,12 +8,17 @@ type Props = {
 export const WordList = ({ wordList }: Props) => {
   return (
     <div className="flex flex-wrap w-full justify-center mb-1 mt-4">
-      {wordList.map((word, i) => (
-        <WordBox 
-          key={i}
-          word={word}
-        />
-      ))}
+      {wordList.length > 0 
+        ? wordList.map((word, i) => (
+          <WordBox
+            key={i}
+            word={word}
+          />
+        )) 
+        : <div className="justify-center rounded mx-0.5 text-xs select-none dark:text-white">
+            Please enter a word.
+          </div>
+      }
     </div>
   )
 }

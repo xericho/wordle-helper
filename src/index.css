@@ -57,7 +57,7 @@ svg.cursor-pointer {
   transition: all var(--animation-speed-fast);
 }
 
-svg.cursor-pointer:hover {
+svg.cursor-pointer:hover, .badge:hover {
   transform: scale(1.2);
 }
 
@@ -67,7 +67,7 @@ svg.cursor-pointer:hover {
 }
 
 .navbar {
-  margin-bottom: 2%;
+  margin-bottom: 2rem;
 }
 
 .navbar-content {
