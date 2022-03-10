@@ -12,6 +12,7 @@ import {
   WORD_NOT_FOUND_MESSAGE,
   CORRECT_WORD_MESSAGE,
   HARD_MODE_ALERT_MESSAGE,
+  ALREADY_EXCLUDED,
 } from './constants/strings'
 import {
   MAX_WORD_LENGTH,
@@ -128,6 +129,42 @@ function App() {
       })
     }
 
+    // Check for consistency in guesses
+    let zipped = currentStatuses.map((e, i) => [e, currentGuess[i]])
+    for (const [s, l] of zipped) {
+      // Letter was already excluded but you marked it as correct
+      if ((s === 'correct' || s === 'present') && excludeLetters.has(l)) {
+        setCurrentRowClass('jiggle')
+        return showErrorAlert(ALREADY_EXCLUDED(l), {
+          onClose: clearCurrentRowClass,
+        })
+      }
+
+      // Double letters in guess but one was correct/present
+      // Just ignore the duplicate absent letter
+      let dupes: any = {};
+      currentGuess.split('').forEach((item, index) => {
+        dupes[item] = dupes[item] || [];
+        dupes[item].push(index);
+      })  
+      for (const k in dupes) {
+        // Assumes there's no 3 duplicate letter word
+        if (dupes[k].length > 1) {
+          // If both are absent, do nothing
+          if (currentStatuses[dupes[k][0]] === 'absent' && currentStatuses[dupes[k][1]] === 'absent') continue
+          // If both are correct, do nothing
+          if (currentStatuses[dupes[k][0]] === 'correct' && currentStatuses[dupes[k][1]] === 'correct') continue
+          // If one correct/present and one absent, change absent to present
+          if (currentStatuses[dupes[k][0]] === 'absent') {
+            currentStatuses[dupes[k][0]] = 'present'
+          } else {
+            currentStatuses[dupes[k][1]] = 'present'
+          }
+        }
+      }
+    }
+
+
     if (
       unicodeLength(currentGuess) === MAX_WORD_LENGTH &&
       guesses.length < MAX_CHALLENGES 
@@ -155,11 +192,8 @@ function App() {
       fetch(url)
         .then(resp => resp.json())
         .then(data => setWordList(data.word_pages[0].word_list))
+        .catch(err => console.log(err))
       setIsWordListModalOpen(true)
-      console.log(guesses, statuses)
-      console.log(excludeLetters, includeLetters, contains)
-      console.log(url)
-      console.log(wordList)
 
       if (guesses.length === MAX_CHALLENGES - 1) {
         showSuccessAlert("Thanks for trying out Herdle!", {

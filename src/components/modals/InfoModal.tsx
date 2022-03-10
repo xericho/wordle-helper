@@ -15,7 +15,8 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
     <BaseModal title="How to Use" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         Enter a word and click on each letter to change it's color. After 
-        pressing enter, a modal of suggested words will appear.
+        pressing enter, a modal of suggested words will appear, sorted by 
+        the most likely word first.
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
@@ -66,7 +67,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
       </p>
 
       <WordList
-        wordList={[{'word': 'fuzzy'},{'word': 'comfy'},{'word': 'howdy'},{'word': 'dumpy'},{'word': 'woozy'},]}
+        wordList={[{'word': 'fuzzy'},{'word': 'comfy'},{'word': 'howdy'},{'word': 'dumpy'},]}
       />
       <p className="text-sm text-gray-500 dark:text-gray-300">
         A list of words will appear to help you solve Wordle!
