@@ -12,7 +12,9 @@ import {
   WORD_NOT_FOUND_MESSAGE,
   CORRECT_WORD_MESSAGE,
   HARD_MODE_ALERT_MESSAGE,
-  ALREADY_EXCLUDED,
+  ALREADY_ABSENT,
+  ALREADY_CORRECT,
+  ALREADY_PRESENT,
 } from './constants/strings'
 import {
   MAX_WORD_LENGTH,
@@ -66,6 +68,7 @@ function App() {
   const [contains, setContains] = useState(['_', '_', '_', '_', '_'])
   const [excludeLetters, setExcludeLetters] = useState(new Set());
   const [includeLetters, setIncludeLetters] = useState(new Set());
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
   useEffect(() => {
@@ -132,34 +135,48 @@ function App() {
     // Check for consistency in guesses
     let zipped = currentStatuses.map((e, i) => [e, currentGuess[i]])
     for (const [s, l] of zipped) {
-      // Letter was already excluded but you marked it as correct
+      // Letter is already absent but marked as correct/present
       if ((s === 'correct' || s === 'present') && excludeLetters.has(l)) {
         setCurrentRowClass('jiggle')
-        return showErrorAlert(ALREADY_EXCLUDED(l), {
+        return showErrorAlert(ALREADY_ABSENT(l), {
           onClose: clearCurrentRowClass,
         })
       }
+      // Letter is already correct but marked as absent
+      if (s === 'absent' && new Set(contains).has(l)) {
+        setCurrentRowClass('jiggle')
+        return showErrorAlert(ALREADY_CORRECT(l), {
+          onClose: clearCurrentRowClass,
+        })
+      }
+      // Letter is already present but marked as absent
+      if (s === 'absent' && includeLetters.has(l)) {
+        setCurrentRowClass('jiggle')
+        return showErrorAlert(ALREADY_PRESENT(l), {
+          onClose: clearCurrentRowClass,
+        })
+      }
+    }
 
-      // Double letters in guess but one was correct/present
-      // Just ignore the duplicate absent letter
-      let dupes: any = {};
-      currentGuess.split('').forEach((item, index) => {
-        dupes[item] = dupes[item] || [];
-        dupes[item].push(index);
-      })  
-      for (const k in dupes) {
-        // Assumes there's no 3 duplicate letter word
-        if (dupes[k].length > 1) {
-          // If both are absent, do nothing
-          if (currentStatuses[dupes[k][0]] === 'absent' && currentStatuses[dupes[k][1]] === 'absent') continue
-          // If both are correct, do nothing
-          if (currentStatuses[dupes[k][0]] === 'correct' && currentStatuses[dupes[k][1]] === 'correct') continue
-          // If one correct/present and one absent, change absent to present
-          if (currentStatuses[dupes[k][0]] === 'absent') {
-            currentStatuses[dupes[k][0]] = 'present'
-          } else {
-            currentStatuses[dupes[k][1]] = 'present'
-          }
+    // Double letters in guess but one was correct/present
+    // Just ignore the duplicate absent letter
+    let dupes: any = {};
+    currentGuess.split('').forEach((item, index) => {
+      dupes[item] = dupes[item] || [];
+      dupes[item].push(index);
+    })  
+    for (const k in dupes) {
+      // Assumes there's no 3 duplicate letter word
+      if (dupes[k].length > 1) {
+        // If both are absent, do nothing
+        if (currentStatuses[dupes[k][0]] === 'absent' && currentStatuses[dupes[k][1]] === 'absent') continue
+        // If both are correct, do nothing
+        if (currentStatuses[dupes[k][0]] === 'correct' && currentStatuses[dupes[k][1]] === 'correct') continue
+        // If one correct/present and one absent, change absent to present
+        if (currentStatuses[dupes[k][0]] === 'absent') {
+          currentStatuses[dupes[k][0]] = 'present'
+        } else {
+          currentStatuses[dupes[k][1]] = 'present'
         }
       }
     }
@@ -176,6 +193,7 @@ function App() {
       setCurrentStatuses([])
       setCurrentGuess('')
       // Update word list
+      setIsLoading(true)
       currentStatuses.forEach((status, pos) => {
           if (status === 'absent') {
             excludeLetters.add(currentGuess[pos])
@@ -194,6 +212,7 @@ function App() {
         .then(data => setWordList(data.word_pages[0].word_list))
         .catch(err => console.log(err))
       setIsWordListModalOpen(true)
+      // setIsLoading(false)
 
       if (guesses.length === MAX_CHALLENGES - 1) {
         showSuccessAlert("Thanks for trying out Herdle!", {
@@ -240,6 +259,7 @@ function App() {
             isOpen={isWordListModalOpen}
             handleClose={() => setIsWordListModalOpen(false)}
             wordList={wordList}
+            isLoading={isLoading}
           />
           <SettingsModal
             isOpen={isSettingsModalOpen}

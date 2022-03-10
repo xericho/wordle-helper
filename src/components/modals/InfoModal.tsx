@@ -68,6 +68,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
 
       <WordList
         wordList={[{'word': 'fuzzy'},{'word': 'comfy'},{'word': 'howdy'},{'word': 'dumpy'},]}
+        isLoading={false}
       />
       <p className="text-sm text-gray-500 dark:text-gray-300">
         A list of words will appear to help you solve Wordle!

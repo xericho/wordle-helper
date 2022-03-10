@@ -15,8 +15,12 @@ export const WRONG_SPOT_MESSAGE = (guess: string, position: number) =>
   `Must use ${guess} in position ${position}`
 export const NOT_CONTAINED_MESSAGE = (letter: string) =>
   `Guess must contain ${letter}`
-export const ALREADY_EXCLUDED = (letter: string) =>
+export const ALREADY_ABSENT = (letter: string) =>
   `${letter} was already marked as absent!`
+export const ALREADY_CORRECT = (letter: string) =>
+  `${letter} was already marked as correct!`
+export const ALREADY_PRESENT = (letter: string) =>
+  `${letter} was already marked as present!`
 export const ENTER_TEXT = 'Enter'
 export const DELETE_TEXT = 'Delete'
 export const STATISTICS_TITLE = 'Statistics'
