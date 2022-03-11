@@ -14,8 +14,8 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
   return (
     <BaseModal title="How to Use" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        Herdle ("helps-with-Wordle") is a Wordle clone that helps you solve Wordle.
-        Enter a word and a list of suggested words will appear!
+        Welcome to Herdle! This is <b>not</b> a game but a tool that "helps with Wordle". 
+        Enter a word and a list of suggested words will appear to help you solve Wordle!
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
@@ -62,7 +62,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
         <Cell value="T" status="absent" />
       </div>
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        Change the letter to the desired color.
+        Change the letter to the desired color by clicking on it.
       </p>
 
       <WordList
