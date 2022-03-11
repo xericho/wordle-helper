@@ -14,9 +14,8 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
   return (
     <BaseModal title="How to Use" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        Enter a word and click on each letter to change it's color. After 
-        pressing enter, a modal of suggested words will appear, sorted by 
-        the most likely word first.
+        Herdle ("helps-with-Wordle") is a Wordle clone that helps you solve Wordle.
+        Enter a word and a list of suggested words will appear!
       </p>
 
       <div className="flex justify-center mb-1 mt-4">
@@ -71,7 +70,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
         isLoading={false}
       />
       <p className="text-sm text-gray-500 dark:text-gray-300">
-        A list of words will appear to help you solve Wordle!
+        After entering, a list of words will appear.
       </p>
 
       <div className="flex mb-1 mt-4">
