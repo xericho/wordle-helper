@@ -210,9 +210,9 @@ function App() {
       fetch(url)
         .then(resp => resp.json())
         .then(data => setWordList(data.word_pages[0].word_list))
-        .catch(err => console.log(err))
+        .catch(err => setWordList(['error']))
       setIsWordListModalOpen(true)
-      // setIsLoading(false)
+      setIsLoading(false)
 
       if (guesses.length === MAX_CHALLENGES - 1) {
         showSuccessAlert("Thanks for trying out Herdle!", {
@@ -240,7 +240,6 @@ function App() {
               currentStatuses={currentStatuses}
               currentRowClassName={currentRowClass}
               setCurrentStatuses={setCurrentStatuses}
-              // isRevealing={isRevealing}
             />
           </div>
           <Keyboard
@@ -249,7 +248,6 @@ function App() {
             onEnter={onEnter}
             guesses={guesses}
             statuses={statuses}
-            // isRevealing={isRevealing}
           />
           <InfoModal
             isOpen={isInfoModalOpen}
